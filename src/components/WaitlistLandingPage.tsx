@@ -1,50 +1,39 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-
 const WaitlistLandingPage = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!email) {
       toast({
         title: "Error",
         description: "Please enter your email address",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     setIsSubmitting(true);
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
     toast({
       title: "Success! 🎉",
-      description: "You've been added to our waitlist. We'll notify you when we launch in July 2025!",
+      description: "You've been added to our waitlist. We'll notify you when we launch in July 2025!"
     });
-    
     setEmail('');
     setIsSubmitting(false);
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white">
+  return <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white">
       {/* Hero Section */}
       <div className="container mx-auto px-4 pt-16 pb-12 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
-            🚀 Digital Intelligence Marketplace
-          </h1>
+          <h1 className="font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent md:text-5xl text-4xl"> Digital Intelligence Marketplace</h1>
           <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
             Get early access to our AI-powered Learning Hub & Tools Directory launching July 2025. 
             <span className="block mt-2 font-semibold text-yellow-400">Start learning. Start building.</span>
@@ -76,10 +65,7 @@ const WaitlistLandingPage = () => {
                   <span className="font-medium">How AI is Changing the World</span>
                 </div>
               </div>
-              <Button 
-                onClick={() => navigate('/courses')}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
-              >
+              <Button onClick={() => navigate('/courses')} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">
                 Start Learning Now
               </Button>
             </CardContent>
@@ -106,10 +92,7 @@ const WaitlistLandingPage = () => {
                   <span className="font-medium">AI Text Summarizer</span>
                 </div>
               </div>
-              <Button 
-                onClick={() => navigate('/ai-tools')}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold"
-              >
+              <Button onClick={() => navigate('/ai-tools')} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold">
                 Try AI Tools Now
               </Button>
             </CardContent>
@@ -132,19 +115,8 @@ const WaitlistLandingPage = () => {
             </p>
             
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-white text-black placeholder:text-gray-500 border-0 h-12 text-lg rounded-lg focus:ring-2 focus:ring-yellow-400"
-                disabled={isSubmitting}
-              />
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold h-12 px-8 rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-yellow-400/20"
-              >
+              <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className="flex-1 bg-white text-black placeholder:text-gray-500 border-0 h-12 text-lg rounded-lg focus:ring-2 focus:ring-yellow-400" disabled={isSubmitting} />
+              <Button type="submit" disabled={isSubmitting} className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold h-12 px-8 rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-yellow-400/20">
                 {isSubmitting ? "Joining..." : "Join Waitlist"}
               </Button>
             </form>
@@ -162,8 +134,6 @@ const WaitlistLandingPage = () => {
           © 2024 Digital Intelligence Marketplace. Launching July 2025.
         </p>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default WaitlistLandingPage;
