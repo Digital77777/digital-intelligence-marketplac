@@ -1,48 +1,73 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 const Courses = () => {
   const navigate = useNavigate();
-  const [youtubeApiKey, setYoutubeApiKey] = useState(localStorage.getItem('youtube_api_key') || '');
-
-  const handleApiKeySubmit = () => {
-    if (!youtubeApiKey.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter your YouTube API key",
-        variant: "destructive",
-      });
-      return;
-    }
-    localStorage.setItem('youtube_api_key', youtubeApiKey);
-    toast({
-      title: "Success",
-      description: "YouTube API key saved successfully!",
-    });
-  };
+  const [validatedVideos, setValidatedVideos] = useState<{[key: string]: {embedUrl: string, title: string}}>({});
 
   const courses = [
     {
       id: 'ai-intro',
       title: '🔍 Introduction to Artificial Intelligence',
       description: 'Learn the fundamentals of AI and its applications in modern technology.',
-      videoId: 'JMUxmLyrhSk', // Example AI intro video
+      videoId: 'JMUxmLyrhSk',
       duration: '45 min'
     },
     {
       id: 'ai-world',
       title: '🤖 How AI is Changing the World',
       description: 'Explore how AI is transforming industries and society.',
-      videoId: 'mJeNghZXtMo', // Example AI world video
+      videoId: 'mJeNghZXtMo',
       duration: '38 min'
     }
   ];
+
+  const validateVideo = async (videoId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('youtube-embed', {
+        body: { videoId }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        setValidatedVideos(prev => ({
+          ...prev,
+          [videoId]: {
+            embedUrl: data.embedUrl,
+            title: data.title
+          }
+        }));
+      } else {
+        console.error('Video validation failed:', data.error);
+        toast({
+          title: "Video Error",
+          description: `Could not load video: ${data.error}`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error validating video:', error);
+      toast({
+        title: "Error",
+        description: "Failed to validate video. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Validate all videos on component mount
+    courses.forEach(course => {
+      validateVideo(course.videoId);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white">
@@ -58,32 +83,6 @@ const Courses = () => {
             Back to Home
           </Button>
         </div>
-
-        {!youtubeApiKey && (
-          <Card className="mb-8 bg-yellow-900/20 border-yellow-600/50">
-            <CardHeader>
-              <CardTitle className="text-yellow-400">YouTube API Key Required</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-300 mb-4">
-                To play videos embedded here, please enter your YouTube API key. 
-                Get one from the Google Developers Console.
-              </p>
-              <div className="flex gap-4">
-                <Input
-                  type="password"
-                  placeholder="Enter YouTube API key"
-                  value={youtubeApiKey}
-                  onChange={(e) => setYoutubeApiKey(e.target.value)}
-                  className="flex-1 bg-white/10 text-white placeholder:text-gray-400"
-                />
-                <Button onClick={handleApiKeySubmit} className="bg-yellow-600 hover:bg-yellow-700">
-                  Save Key
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         <Tabs defaultValue={courses[0].id} className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-white/10">
@@ -107,13 +106,13 @@ const Courses = () => {
                   <p className="text-sm text-indigo-300">Duration: {course.duration}</p>
                 </CardHeader>
                 <CardContent>
-                  {youtubeApiKey ? (
+                  {validatedVideos[course.videoId] ? (
                     <div className="aspect-video bg-black rounded-lg overflow-hidden">
                       <iframe
                         width="100%"
                         height="100%"
-                        src={`https://www.youtube.com/embed/${course.videoId}?key=${youtubeApiKey}`}
-                        title={course.title}
+                        src={validatedVideos[course.videoId].embedUrl}
+                        title={validatedVideos[course.videoId].title}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -122,7 +121,7 @@ const Courses = () => {
                     </div>
                   ) : (
                     <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center">
-                      <p className="text-gray-400">Enter YouTube API key to watch videos</p>
+                      <p className="text-gray-400">Loading video...</p>
                     </div>
                   )}
                 </CardContent>
