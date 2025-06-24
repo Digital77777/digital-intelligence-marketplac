@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const WaitlistLandingPage = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +66,7 @@ const WaitlistLandingPage = () => {
               <p className="mb-6 text-lg leading-relaxed">
                 Master AI fundamentals with our curated courses designed for beginners and professionals alike.
               </p>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-6">
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-indigo-700/30 hover:bg-indigo-700/50 transition-colors">
                   <span className="text-lg">🔍</span>
                   <span className="font-medium">Introduction to Artificial Intelligence</span>
@@ -74,6 +76,12 @@ const WaitlistLandingPage = () => {
                   <span className="font-medium">How AI is Changing the World</span>
                 </div>
               </div>
+              <Button 
+                onClick={() => navigate('/courses')}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+              >
+                Start Learning Now
+              </Button>
             </CardContent>
           </Card>
 
@@ -88,7 +96,7 @@ const WaitlistLandingPage = () => {
               <p className="mb-6 text-lg leading-relaxed">
                 Discover powerful AI tools to supercharge your productivity and creativity.
               </p>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-6">
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-purple-700/30 hover:bg-purple-700/50 transition-colors">
                   <span className="text-lg">🖼️</span>
                   <span className="font-medium">AI Image Generator</span>
@@ -98,6 +106,12 @@ const WaitlistLandingPage = () => {
                   <span className="font-medium">AI Text Summarizer</span>
                 </div>
               </div>
+              <Button 
+                onClick={() => navigate('/ai-tools')}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+              >
+                Try AI Tools Now
+              </Button>
             </CardContent>
           </Card>
         </div>
