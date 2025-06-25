@@ -9,13 +9,144 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      email_waiting_list: {
+        Row: {
+          email: string
+          id: number
+        }
+        Insert: {
+          email: string
+          id?: never
+        }
+        Update: {
+          email?: string
+          id?: never
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_codes_email_fkey"
+            columns: ["email"]
+            isOneToOne: false
+            referencedRelation: "email_waiting_list"
+            referencedColumns: ["email"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referral_code: string
+          referred_email: string
+          referrer_email: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_email: string
+          referrer_email: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_email?: string
+          referrer_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referral_code_fkey"
+            columns: ["referral_code"]
+            isOneToOne: false
+            referencedRelation: "referral_codes"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "referrals_referred_email_fkey"
+            columns: ["referred_email"]
+            isOneToOne: true
+            referencedRelation: "email_waiting_list"
+            referencedColumns: ["email"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_email_fkey"
+            columns: ["referrer_email"]
+            isOneToOne: false
+            referencedRelation: "email_waiting_list"
+            referencedColumns: ["email"]
+          },
+        ]
+      }
+      rewards: {
+        Row: {
+          claimed: boolean
+          earned_at: string
+          email: string
+          id: string
+          referral_count: number
+          tier: string
+        }
+        Insert: {
+          claimed?: boolean
+          earned_at?: string
+          email: string
+          id?: string
+          referral_count: number
+          tier: string
+        }
+        Update: {
+          claimed?: boolean
+          earned_at?: string
+          email?: string
+          id?: string
+          referral_count?: number
+          tier?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rewards_email_fkey"
+            columns: ["email"]
+            isOneToOne: false
+            referencedRelation: "email_waiting_list"
+            referencedColumns: ["email"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      process_referral: {
+        Args: { referral_code_input: string; new_email: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

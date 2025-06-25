@@ -6,3 +6,6 @@ verify_jwt = false
 
 [functions.youtube-embed]
 verify_jwt = false
+
+[functions.referrals]
+verify_jwt = false
