@@ -41,7 +41,7 @@ const WaitlistLandingPage = () => {
 
     try {
       // Add to waitlist
-      const { data, error } = await fetch('https://dxddsndbtxpiqxpkuxcb.supabase.co/rest/v1/email_waiting_list', {
+      const response = await fetch('https://dxddsndbtxpiqxpkuxcb.supabase.co/rest/v1/email_waiting_list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,6 +51,10 @@ const WaitlistLandingPage = () => {
         },
         body: JSON.stringify({ email })
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to add to waitlist');
+      }
 
       // Process referral if there's a referral code
       if (referralCode) {
