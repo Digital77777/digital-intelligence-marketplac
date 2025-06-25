@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Copy, Gift, Users, MessageCircle } from 'lucide-react';
+import { Copy, Gift, Users } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import WhatsAppShareButton from './WhatsAppShareButton';
 
 interface ReferralData {
   referralCode: string;
@@ -31,19 +32,14 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
 
   const fetchReferralData = async () => {
     try {
-      const response = await fetch('https://dxddsndbtxpiqxpkuxcb.supabase.co/functions/v1/referrals', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data } = await supabase.functions.invoke('referrals', {
+        body: {
           action: 'getReferralData',
           email: userEmail
-        })
+        }
       });
 
-      const data = await response.json();
-      if (data.success) {
+      if (data?.success) {
         setReferralData(data);
       }
     } catch (error) {
@@ -62,16 +58,6 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
       title: "Copied!",
       description: "Referral link copied to clipboard"
     });
-  };
-
-  const shareOnWhatsApp = () => {
-    if (!referralData?.referralCode) return;
-    
-    const referralLink = `${window.location.origin}?ref=${referralData.referralCode}`;
-    const message = `🚀 Join me on the Digital Intelligence Marketplace waitlist! Get early access to AI-powered learning tools launching July 2025. Use my referral link: ${referralLink}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank');
   };
 
   const getRewardTierInfo = (tier: string) => {
@@ -120,7 +106,7 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
   return (
     <div className="space-y-6">
       {/* Referral Stats */}
-      <Card className="bg-gradient-to-r from-purple-800/50 to-indigo-800/50 border-purple-600/50 backdrop-blur-sm">
+      <Card className="bg-gradient-to-r from-purple-800/50 to-blue-800/50 border-purple-600/50 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
             <Users className="w-6 h-6" />
@@ -134,7 +120,7 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
               <div className="text-gray-300">Friends Referred</div>
             </div>
             <div className="text-center p-4 bg-white/10 rounded-lg">
-              <div className="text-3xl font-bold text-yellow-400">{referralData.rewards.length}</div>
+              <div className="text-3xl font-bold text-blue-400">{referralData.rewards.length}</div>
               <div className="text-gray-300">Rewards Earned</div>
             </div>
             <div className="text-center p-4 bg-white/10 rounded-lg">
@@ -149,18 +135,15 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 onClick={copyReferralLink}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Copy className="w-4 h-4 mr-2" />
                 Copy Link
               </Button>
-              <Button
-                onClick={shareOnWhatsApp}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Share on WhatsApp
-              </Button>
+              <WhatsAppShareButton 
+                referralCode={referralData.referralCode}
+                className="flex-1"
+              />
             </div>
           </div>
         </CardContent>
@@ -201,8 +184,8 @@ const ReferralProgram: React.FC<ReferralProgramProps> = ({ userEmail }) => {
             </div>
 
             {nextReward && (
-              <div className="text-center p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
-                <div className="text-yellow-400 font-semibold">
+              <div className="text-center p-4 bg-blue-400/10 border border-blue-400/30 rounded-lg">
+                <div className="text-blue-400 font-semibold">
                   Next Reward: {nextReward.target - referralData.referralCount} more friends for {nextReward.reward}
                 </div>
               </div>

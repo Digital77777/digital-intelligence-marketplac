@@ -70,10 +70,10 @@ const Courses = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
             📘 Learning Hub
           </h1>
           <Button 
@@ -90,7 +90,7 @@ const Courses = () => {
               <TabsTrigger 
                 key={course.id} 
                 value={course.id}
-                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
               >
                 {course.title}
               </TabsTrigger>
@@ -99,11 +99,11 @@ const Courses = () => {
 
           {courses.map((course) => (
             <TabsContent key={course.id} value={course.id} className="mt-6">
-              <Card className="bg-indigo-800/30 border-indigo-600/50">
+              <Card className="bg-blue-800/30 border-blue-600/50">
                 <CardHeader>
                   <CardTitle className="text-2xl text-white">{course.title}</CardTitle>
                   <p className="text-gray-300">{course.description}</p>
-                  <p className="text-sm text-indigo-300">Duration: {course.duration}</p>
+                  <p className="text-sm text-blue-300">Duration: {course.duration}</p>
                 </CardHeader>
                 <CardContent>
                   {validatedVideos[course.videoId] ? (

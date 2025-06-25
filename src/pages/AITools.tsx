@@ -101,10 +101,10 @@ const AITools = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
             🧰 AI Tools Directory
           </h1>
           <Button 
@@ -146,7 +146,7 @@ const AITools = () => {
           </Card>
 
           {/* AI Text Summarizer */}
-          <Card className="bg-indigo-800/30 border-indigo-600/50">
+          <Card className="bg-blue-800/30 border-blue-600/50">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-3">
                 📝 AI Text Summarizer
@@ -162,13 +162,13 @@ const AITools = () => {
               <Button 
                 onClick={summarizeText}
                 disabled={isSummarizing}
-                className="w-full bg-indigo-600 hover:bg-indigo-700"
+                className="w-full bg-blue-600 hover:bg-blue-700"
               >
                 {isSummarizing ? "Summarizing..." : "Summarize Text"}
               </Button>
               {summary && (
                 <div className="mt-4 p-4 bg-white/10 rounded-lg">
-                  <h4 className="font-semibold mb-2 text-indigo-300">Summary:</h4>
+                  <h4 className="font-semibold mb-2 text-blue-300">Summary:</h4>
                   <p className="text-gray-200">{summary}</p>
                 </div>
               )}
